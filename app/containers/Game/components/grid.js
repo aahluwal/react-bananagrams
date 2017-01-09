@@ -14,7 +14,10 @@ const GridRow = styled.div`
 `;
 
 const GridCell = styled.div`
-  border: 1px dotted black;
+  border-bottom: ${(props) => (props.borderBottom ? '1px dashed black' : 'none')};
+  border-left: 1px dashed black;
+  border-right: ${(props) => (props.borderRight ? '1px dashed black' : 'none')};
+  border-top: 1px dashed black;
   display: inline-block;
   height: 52px;
   vertical-align: middle;
@@ -25,10 +28,13 @@ export default function Grid(props) {
   const {grid} = props;
   return (
     <StyledGrid>
-      {grid.map((row) => (
+      {grid.map((row, rowIndex) => (
         <GridRow>
-          {row.map((cell) => (
-            <GridCell>
+          {row.map((cell, colIndex) => (
+            <GridCell
+              borderBottom={rowIndex === grid.length - 1}
+              borderRight={colIndex === row.length - 1}
+            >
               {cell ?
                 <Tile>
                   {cell}
