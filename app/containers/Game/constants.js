@@ -32,11 +32,12 @@ export const TILE_DISTRIBUTION = {
 };
 export const TILE_LIST = [];
 Object.keys(TILE_DISTRIBUTION).forEach((char) => {
-  for (let i = 0; i < TILE_DISTRIBUTION[char]; i++) {
+  for (let i = 0; i < TILE_DISTRIBUTION[char]; i += 1) {
     TILE_LIST.push(char);
   }
 });
 
 export const GAME_SETTINGS = {
+  gridSize: 8,
   initialHandSize: 15
 };

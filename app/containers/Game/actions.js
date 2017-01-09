@@ -26,19 +26,35 @@ import {
  * Shuffles array in place. ES6 version
  * @param {Array} a items The array containing the items.
  */
+/* eslint-disable no-param-reassign */
 function shuffle(a) {
-    for (let i = a.length; i; i--) {
-        let j = Math.floor(Math.random() * i);
-        [a[i - 1], a[j]] = [a[j], a[i - 1]];
-    }
+  for (let i = a.length; i; i -= 1) {
+    const j = Math.floor(Math.random() * i);
+    [a[i - 1], a[j]] = [a[j], a[i - 1]];
+  }
 }
+/* eslint-enable no-param-reassign */
 
 function generateGameState() {
   const tiles = TILE_LIST.slice();
   shuffle(tiles);
   const hand = tiles.splice(0, GAME_SETTINGS.initialHandSize);
 
+  // Generate the empty grid
+  const grid = [];
+  for (let i = 0; i < GAME_SETTINGS.gridSize; i += 1) {
+    grid.push([]);
+    for (let j = 0; j < GAME_SETTINGS.gridSize; j += 1) {
+      if (i === 0 && j === 0) {
+        grid[i].push('A');
+      } else {
+        grid[i].push(null);
+      }
+    }
+  }
+
   return {
+    grid,
     hand,
     tiles
   };
