@@ -114,7 +114,7 @@
       ],
       "comma-dangle": [
         2,
-        "always-multiline"
+        "never"
       ],
       "import/imports-first": 0,
       "import/newline-after-import": 0,
@@ -141,6 +141,7 @@
       "newline-per-chained-call": 0,
       "no-console": 1,
       "no-use-before-define": 0,
+      "object-curly-spacing": ["error", "never"],
       "prefer-template": 2,
       "class-methods-use-this": 0,
       "react/forbid-prop-types": 0,
