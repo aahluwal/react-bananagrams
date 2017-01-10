@@ -44,6 +44,6 @@ Object.keys(TILE_DISTRIBUTION).forEach((char) => {
 });
 
 export const GAME_SETTINGS = {
-  gridSize: 8,
+  gridSize: 20,
   initialHandSize: 15
 };
