@@ -9,6 +9,7 @@ const Tile = styled.div`
   line-height: 48px;
   text-align: center;
   text-transform: uppercase;
+  user-select: none;
   width: 48px;
 `;
 

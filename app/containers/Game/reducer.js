@@ -75,9 +75,12 @@ function gameReducer(state = initialState, action) {
         .set('grid', action.grid)
         .set('hand', action.hand)
         .set('tiles', action.tiles);
-    case SELECT_TILE:
+    case SELECT_TILE: {
+      const selectedId = state.get('selectedId');
+      const {tileId} = action;
       return state
-        .set('selectedId', action.tileId);
+        .set('selectedId', tileId === selectedId ? null : action.tileId);
+    }
     case PLACE_TILE: {
       const {rowIndex, columnIndex} = action;
       const grid = state.get('grid');
@@ -95,6 +98,10 @@ function gameReducer(state = initialState, action) {
           .set('hand', newHand)
           .set('selectedId', null);
       } else if (tileInGrid) {
+        if (selectedTile && selectedTile.id === tileInGrid.id) {
+          return state
+            .set('selectedId', null);
+        }
         // Select tile in grid
         return state
           .set('selectedId', tileInGrid.id);
