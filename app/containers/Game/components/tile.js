@@ -12,4 +12,8 @@ const Tile = styled.div`
   width: 48px;
 `;
 
+export const SelectedTile = styled(Tile)`
+  background-color: grey;
+`;
+
 export default Tile;

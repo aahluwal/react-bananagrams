@@ -1,5 +1,8 @@
 export const START_GAME = 'bananagrams/Game/START_GAME';
 export const GET_TILES = 'bananagrams/Game/GET_TILES';
+export const SELECT_TILE = 'bananagrams/Game/SELECT_TILE';
+export const PLACE_TILE = 'bananagrams/Game/PLACE_TILE';
+
 
 // Game Constants
 export const TILE_DISTRIBUTION = {
@@ -33,7 +36,10 @@ export const TILE_DISTRIBUTION = {
 export const TILE_LIST = [];
 Object.keys(TILE_DISTRIBUTION).forEach((char) => {
   for (let i = 0; i < TILE_DISTRIBUTION[char]; i += 1) {
-    TILE_LIST.push(char);
+    TILE_LIST.push({
+      char,
+      id: TILE_LIST.length
+    });
   }
 });
 

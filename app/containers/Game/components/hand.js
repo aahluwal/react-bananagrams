@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import styled from 'styled-components';
 
-import Tile from './tile';
+import Tile, {SelectedTile} from './tile';
 
 const HandContainer = styled.div`
   width: 260px;
@@ -16,19 +16,32 @@ const StyledTile = styled(Tile)`
   margin: 5px;
 `;
 
+const SelectedStyledTile = styled(SelectedTile)`
+  margin: 5px;
+`;
+
 export default function Hand(props) {
-  const {hand} = props;
+  const {hand, onSelectTile, selectedId} = props;
+  function onClickTile(tile) {
+    onSelectTile(tile);
+  }
   return (
     <HandContainer>
       {hand.map((tile) => (
-        <StyledTile>
-          {tile}
-        </StyledTile>
+        tile.id === selectedId ?
+          (<SelectedStyledTile onClick={() => onClickTile(tile)}>
+            {tile.char}
+          </SelectedStyledTile>) :
+          (<StyledTile onClick={() => onClickTile(tile)}>
+            {tile.char}
+          </StyledTile>)
       ))}
     </HandContainer>
   );
 }
 
 Hand.propTypes = {
-  hand: PropTypes.array.isRequired
+  hand: PropTypes.array.isRequired,
+  onSelectTile: PropTypes.func,
+  selectedId: PropTypes.number
 };

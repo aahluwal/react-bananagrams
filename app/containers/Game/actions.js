@@ -19,7 +19,9 @@
 import {
   GAME_SETTINGS,
   START_GAME,
-  TILE_LIST
+  SELECT_TILE,
+  TILE_LIST,
+  PLACE_TILE
 } from './constants';
 
 /**
@@ -45,11 +47,7 @@ function generateGameState() {
   for (let i = 0; i < GAME_SETTINGS.gridSize; i += 1) {
     grid.push([]);
     for (let j = 0; j < GAME_SETTINGS.gridSize; j += 1) {
-      if (i === 0 && j === 0) {
-        grid[i].push('A');
-      } else {
-        grid[i].push(null);
-      }
+      grid[i].push(null);
     }
   }
 
@@ -64,5 +62,21 @@ export function startGame() {
   return {
     type: START_GAME,
     ...generateGameState()
+  };
+}
+
+export function selectTile(tile) {
+  return {
+    type: SELECT_TILE,
+    tileId: tile.id
+
+  };
+}
+
+export function placeTile(rowIndex, columnIndex) {
+  return {
+    type: PLACE_TILE,
+    rowIndex,
+    columnIndex
   };
 }
