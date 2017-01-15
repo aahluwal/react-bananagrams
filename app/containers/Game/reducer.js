@@ -9,7 +9,9 @@ import deepcopy from 'deepcopy';
 import {
   START_GAME,
   SELECT_TILE,
-  PLACE_TILE
+  PLACE_TILE,
+  PEEL,
+  NUM_TILES_AFTER_PEEL
 } from './constants';
 
 const initialState = fromJS({
@@ -57,8 +59,8 @@ function getSelectedTile(state) {
       return tile;
     }
   }
-  for (let i = 0; i < grid.length; i+= 1) {
-    for (let j = 0; j < grid[i].length; j+= 1) {
+  for (let i = 0; i < grid.length; i += 1) {
+    for (let j = 0; j < grid[i].length; j += 1) {
       const tile = grid[i][j];
       if (tile && tile.id === selectedId) {
         return tile;
@@ -66,6 +68,20 @@ function getSelectedTile(state) {
     }
   }
   return null;
+}
+
+//After valid PEEL
+function getNewTiles(tiles, hand) {
+  const newTiles = tiles.slice();
+  const newHand = hand.slice();
+  for (let i = 0; i < NUM_TILES_AFTER_PEEL; i += 1) {
+    const tile = newTiles.pop();
+    newHand.push(tile);
+  }
+  return {
+    hand: newHand,
+    tiles: newTiles
+  };
 }
 
 function gameReducer(state = initialState, action) {
@@ -80,6 +96,14 @@ function gameReducer(state = initialState, action) {
       const {tileId} = action;
       return state
         .set('selectedId', tileId === selectedId ? null : action.tileId);
+    }
+    case PEEL: {
+      const grid = state.get('grid');
+      const prevHand = state.get('hand');
+      const {hand, tiles} = getNewTiles(state.get('tiles'), prevHand);
+      return state
+        .set('hand', hand)
+        .set('tiles', tiles);
     }
     case PLACE_TILE: {
       const {rowIndex, columnIndex} = action;

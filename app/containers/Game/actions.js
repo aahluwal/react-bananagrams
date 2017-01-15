@@ -21,7 +21,8 @@ import {
   START_GAME,
   SELECT_TILE,
   TILE_LIST,
-  PLACE_TILE
+  PLACE_TILE,
+  PEEL
 } from './constants';
 
 /**
@@ -58,6 +59,7 @@ function generateGameState() {
   };
 }
 
+
 export function startGame() {
   return {
     type: START_GAME,
@@ -78,5 +80,11 @@ export function placeTile(rowIndex, columnIndex) {
     type: PLACE_TILE,
     rowIndex,
     columnIndex
+  };
+}
+
+export function peel() {
+  return {
+    type: PEEL
   };
 }

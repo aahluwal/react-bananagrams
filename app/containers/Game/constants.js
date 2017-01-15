@@ -2,6 +2,9 @@ export const START_GAME = 'bananagrams/Game/START_GAME';
 export const GET_TILES = 'bananagrams/Game/GET_TILES';
 export const SELECT_TILE = 'bananagrams/Game/SELECT_TILE';
 export const PLACE_TILE = 'bananagrams/Game/PLACE_TILE';
+export const PEEL = 'bananagrams/Game/PEEL';
+export const NUM_TILES_AFTER_PEEL = 5;
+
 
 
 // Game Constants
@@ -44,6 +47,6 @@ Object.keys(TILE_DISTRIBUTION).forEach((char) => {
 });
 
 export const GAME_SETTINGS = {
-  gridSize: 20,
+  gridSize: 15,
   initialHandSize: 15
 };
