@@ -6,7 +6,6 @@ export const PEEL = 'bananagrams/Game/PEEL';
 export const NUM_TILES_AFTER_PEEL = 5;
 
 
-
 // Game Constants
 export const TILE_DISTRIBUTION = {
   a: 13,
@@ -47,6 +46,6 @@ Object.keys(TILE_DISTRIBUTION).forEach((char) => {
 });
 
 export const GAME_SETTINGS = {
-  gridSize: 15,
-  initialHandSize: 15
+  gridSize: 8,
+  initialHandSize: 5
 };

@@ -7,6 +7,8 @@ const StyledGrid = styled.div`
   background-color: green;
   height: 100%;
   padding: 20px;
+  margin-left: 300px;
+  width: 1180px;
 `;
 
 const GridRow = styled.div`

@@ -10,6 +10,7 @@ const HandContainer = styled.div`
   flex-wrap: wrap;
   justify-content: center;
   padding: 10px;
+  position: absolute;
 `;
 
 const StyledTile = styled(Tile)`
