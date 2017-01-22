@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {connect} from 'react-redux';
 
-import {startGame, selectTile, placeTile, peel} from './actions';
+import {startGame, placeTileInGrid, placeTileInHand, peel} from './actions';
 import Grid from './components/grid';
 import Hand from './components/hand';
 import xhr from 'xhr';
@@ -31,11 +31,10 @@ export class Game extends React.PureComponent { // eslint-disable-line react/pre
   render() {
     const {
       onStartGame,
-      onSelectTile,
-      onPlaceTile,
+      onPlaceTileInGrid,
+      onPlaceTileInHand,
       grid = [],
-      hand = [],
-      selectedId = null
+      hand = []
     } = this.props;
     return (
       <div>
@@ -47,24 +46,24 @@ export class Game extends React.PureComponent { // eslint-disable-line react/pre
             null
           }
         </h1>
-        <div>
-          <Hand selectedId={selectedId} onSelectTile={onSelectTile} hand={hand} />
-          <Grid onPlaceTile={onPlaceTile} grid={grid} selectedId={selectedId} />
+        <div style={{position: 'relative'}}>
+          <Hand onPlaceTile={onPlaceTileInHand} hand={hand} />
+          <Grid onPlaceTile={onPlaceTileInGrid} grid={grid} />
         </div>
       </div>
     );
   }
 }
-//Check grid
-//If valid, add 5 tiles to hand
-//If not valid, display message and keep hand the same
+
+// Check grid
+// If valid, add 5 tiles to hand
+// If not valid, display message and keep hand the same
 Game.propTypes = {
   onStartGame: PropTypes.func,
-  onSelectTile: PropTypes.func,
   grid: PropTypes.array,
   hand: PropTypes.array,
-  selectedId: PropTypes.number,
-  onPlaceTile: PropTypes.func,
+  onPlaceTileInGrid: PropTypes.func,
+  onPlaceTileInHand: PropTypes.func,
   onPeel: PropTypes.func
 
 };
@@ -72,8 +71,8 @@ Game.propTypes = {
 const mapDispatchToProps = (dispatch) => (
   {
     onStartGame: () => dispatch(startGame()),
-    onSelectTile: (tile) => dispatch(selectTile(tile)),
-    onPlaceTile: (row, column) => dispatch(placeTile(row, column)),
+    onPlaceTileInGrid: (tile, row, column) => dispatch(placeTileInGrid(tile, row, column)),
+    onPlaceTileInHand: (tile) => dispatch(placeTileInHand(tile)),
     onPeel: () => dispatch(peel())
   }
 );
@@ -83,8 +82,7 @@ const mapStateToProps = (state) => {
   return {
     grid: gameState.get('grid'),
     hand: gameState.get('hand'),
-    tiles: gameState.get('tiles'),
-    selectedId: gameState.get('selectedId')
+    tiles: gameState.get('tiles')
   };
 };
 

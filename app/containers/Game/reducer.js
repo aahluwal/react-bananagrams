@@ -8,8 +8,8 @@ import {fromJS} from 'immutable';
 import deepcopy from 'deepcopy';
 import {
   START_GAME,
-  SELECT_TILE,
-  PLACE_TILE,
+  PLACE_TILE_IN_GRID,
+  PLACE_TILE_IN_HAND,
   PEEL,
   NUM_TILES_AFTER_PEEL
 } from './constants';
@@ -17,8 +17,7 @@ import {
 const initialState = fromJS({
   grid: [],
   hand: [],
-  tiles: [],
-  selectedId: null
+  tiles: []
 });
 
 
@@ -38,6 +37,10 @@ function removeTileFromHand(tile, hand) {
   return newTiles;
 }
 
+function isTileInHand(tile, hand) {
+  return hand.some((t) => t.id === tile.id);
+}
+
 function removeTileFromGrid(tileToRemove, grid) {
   const newGrid = deepcopy(grid);
   for (let i = 0; i < grid.length; i += 1) {
@@ -49,28 +52,7 @@ function removeTileFromGrid(tileToRemove, grid) {
   return newGrid;
 }
 
-function getSelectedTile(state) {
-  const selectedId = state.get('selectedId');
-  const hand = state.get('hand');
-  const grid = state.get('grid');
-  for (let i = 0; i < hand.length; i += 1) {
-    const tile = hand[i];
-    if (tile.id === selectedId) {
-      return tile;
-    }
-  }
-  for (let i = 0; i < grid.length; i += 1) {
-    for (let j = 0; j < grid[i].length; j += 1) {
-      const tile = grid[i][j];
-      if (tile && tile.id === selectedId) {
-        return tile;
-      }
-    }
-  }
-  return null;
-}
-
-//After valid PEEL
+// After valid PEEL
 function getNewTiles(tiles, hand) {
   const newTiles = tiles.slice();
   const newHand = hand.slice();
@@ -91,46 +73,47 @@ function gameReducer(state = initialState, action) {
         .set('grid', action.grid)
         .set('hand', action.hand)
         .set('tiles', action.tiles);
-    case SELECT_TILE: {
-      const selectedId = state.get('selectedId');
-      const {tileId} = action;
-      return state
-        .set('selectedId', tileId === selectedId ? null : action.tileId);
-    }
     case PEEL: {
-      const grid = state.get('grid');
       const prevHand = state.get('hand');
       const {hand, tiles} = getNewTiles(state.get('tiles'), prevHand);
       return state
         .set('hand', hand)
         .set('tiles', tiles);
     }
-    case PLACE_TILE: {
-      const {rowIndex, columnIndex} = action;
+    case PLACE_TILE_IN_HAND: {
+      const {tile} = action;
+      const hand = state.get('hand');
       const grid = state.get('grid');
-      const selectedTile = getSelectedTile(state);
+
+      if (isTileInHand(tile, hand)) {
+        return state;
+      }
+
+      // Placing a tile in the hand
+      const newGrid = removeTileFromGrid(tile, grid);
+      const newHand = hand.concat([tile]);
+
+      return state
+        .set('grid', newGrid)
+        .set('hand', newHand);
+    }
+    case PLACE_TILE_IN_GRID: {
+      const {tile, rowIndex, columnIndex} = action;
+      const grid = state.get('grid');
       const tileInGrid = grid[rowIndex][columnIndex];
 
-      if (selectedTile && !tileInGrid) {
-        // Placing a tile in the grid
-        const newHand = removeTileFromHand(selectedTile, state.get('hand'));
-        const gridWithoutSelected = removeTileFromGrid(selectedTile, state.get('grid'));
-        const newGrid = placeTileOnGrid(selectedTile, rowIndex, columnIndex, gridWithoutSelected);
-
-        return state
-          .set('grid', newGrid)
-          .set('hand', newHand)
-          .set('selectedId', null);
-      } else if (tileInGrid) {
-        if (selectedTile && selectedTile.id === tileInGrid.id) {
-          return state
-            .set('selectedId', null);
-        }
-        // Select tile in grid
-        return state
-          .set('selectedId', tileInGrid.id);
+      if (tileInGrid) {
+        return state;
       }
-      return state;
+
+      // Placing a tile in the grid
+      const newHand = removeTileFromHand(tile, state.get('hand'));
+      const gridWithoutTile = removeTileFromGrid(tile, state.get('grid'));
+      const newGrid = placeTileOnGrid(tile, rowIndex, columnIndex, gridWithoutTile);
+
+      return state
+        .set('grid', newGrid)
+        .set('hand', newHand);
     }
     default:
       return state;

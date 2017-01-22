@@ -1,7 +1,8 @@
 export const START_GAME = 'bananagrams/Game/START_GAME';
 export const GET_TILES = 'bananagrams/Game/GET_TILES';
-export const SELECT_TILE = 'bananagrams/Game/SELECT_TILE';
 export const PLACE_TILE = 'bananagrams/Game/PLACE_TILE';
+export const PLACE_TILE_IN_GRID = 'bananagrams/Game/PLACE_TILE_IN_GRID';
+export const PLACE_TILE_IN_HAND = 'bananagrams/Game/PLACE_TILE_IN_HAND';
 export const PEEL = 'bananagrams/Game/PEEL';
 export const NUM_TILES_AFTER_PEEL = 5;
 
@@ -48,4 +49,8 @@ Object.keys(TILE_DISTRIBUTION).forEach((char) => {
 export const GAME_SETTINGS = {
   gridSize: 8,
   initialHandSize: 5
+};
+
+export const DRAG_TYPES = {
+  TILE: 'tile'
 };

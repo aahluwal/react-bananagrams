@@ -12,11 +12,13 @@
  */
 
 import React from 'react';
+import HTML5Backend from 'react-dnd-html5-backend';
+import {DragDropContext} from 'react-dnd';
 
-export default class App extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+class App extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
 
   static propTypes = {
-    children: React.PropTypes.node,
+    children: React.PropTypes.node
   };
 
   render() {
@@ -27,3 +29,5 @@ export default class App extends React.PureComponent { // eslint-disable-line re
     );
   }
 }
+
+export default DragDropContext(HTML5Backend)(App);

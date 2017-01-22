@@ -19,9 +19,9 @@
 import {
   GAME_SETTINGS,
   START_GAME,
-  SELECT_TILE,
   TILE_LIST,
-  PLACE_TILE,
+  PLACE_TILE_IN_GRID,
+  PLACE_TILE_IN_HAND,
   PEEL
 } from './constants';
 
@@ -67,17 +67,17 @@ export function startGame() {
   };
 }
 
-export function selectTile(tile) {
+export function placeTileInHand(tile) {
   return {
-    type: SELECT_TILE,
-    tileId: tile.id
-
+    type: PLACE_TILE_IN_HAND,
+    tile
   };
 }
 
-export function placeTile(rowIndex, columnIndex) {
+export function placeTileInGrid(tile, rowIndex, columnIndex) {
   return {
-    type: PLACE_TILE,
+    type: PLACE_TILE_IN_GRID,
+    tile,
     rowIndex,
     columnIndex
   };

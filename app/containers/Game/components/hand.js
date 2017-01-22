@@ -1,48 +1,63 @@
 import React, {PropTypes} from 'react';
+import {DropTarget} from 'react-dnd';
 import styled from 'styled-components';
 
-import Tile, {SelectedTile} from './tile';
+import {DRAG_TYPES} from '../constants';
+import Tile from './draggable-tile';
 
-const HandContainer = styled.div`
-  width: 260px;
-  background-color: blue;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 10px;
-  position: absolute;
-`;
+function handStyles(props) {
+  return {
+    minHeight: '78px',
+    width: '260px',
+    backgroundColor: props.isOver ? 'yellow' : 'blue',
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    padding: '10px',
+    position: 'absolute'
+  };
+}
 
-const StyledTile = styled(Tile)`
+const TileContainer = styled.div`
   margin: 5px;
 `;
 
-const SelectedStyledTile = styled(SelectedTile)`
-  margin: 5px;
-`;
-
-export default function Hand(props) {
-  const {hand, onSelectTile, selectedId} = props;
-  function onClickTile(tile) {
-    onSelectTile(tile);
+const handTarget = {
+  drop: (props, monitor) => {
+    const tile = monitor.getItem();
+    const {onPlaceTile} = props;
+    if (onPlaceTile && tile) {
+      onPlaceTile(tile);
+    }
   }
-  return (
-    <HandContainer>
+};
+
+function collect(connect, monitor) {
+  return {
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver()
+  };
+}
+
+function Hand(props) {
+  const {connectDropTarget, hand, isOver} = props;
+
+  return connectDropTarget(
+    <div style={handStyles({isOver})}>
       {hand.map((tile) => (
-        tile.id === selectedId ?
-          (<SelectedStyledTile onClick={() => onClickTile(tile)}>
-            {tile.char}
-          </SelectedStyledTile>) :
-          (<StyledTile onClick={() => onClickTile(tile)}>
-            {tile.char}
-          </StyledTile>)
+        <TileContainer>
+          <Tile tile={tile} />
+        </TileContainer>
       ))}
-    </HandContainer>
+    </div>
   );
 }
 
 Hand.propTypes = {
   hand: PropTypes.array.isRequired,
-  onSelectTile: PropTypes.func,
+  isOver: PropTypes.bool,
+  onPlaceTile: PropTypes.func,
   selectedId: PropTypes.number
 };
+
+export default DropTarget(DRAG_TYPES.TILE, handTarget, collect)(Hand);

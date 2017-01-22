@@ -1,73 +1,37 @@
 import React, {PropTypes} from 'react';
 import styled from 'styled-components';
 
-import Tile, {SelectedTile} from './tile';
+import {GAME_SETTINGS} from '../constants';
+import GridCell from './grid-cell';
+
+const CELL_WIDTH = 54;
+const gridWidth = CELL_WIDTH * GAME_SETTINGS.gridSize;
 
 const StyledGrid = styled.div`
-  background-color: green;
   height: 100%;
-  padding: 20px;
-  margin-left: 300px;
-  width: 1180px;
+  position: absolute;
+  left: 300px;
 `;
 
 const GridRow = styled.div`
-  height: 54px;
-`;
-
-const GridCell = styled.div`
-  border-bottom: ${(props) => (props.borderBottom ? '1px dashed black' : 'none')};
-  border-left: 1px dashed black;
-  border-right: ${(props) => (props.borderRight ? '1px dashed black' : 'none')};
+  border-right: 1px dashed black;
   border-top: 1px dashed black;
-  display: inline-block;
-  height: 52px;
-  vertical-align: middle;
-  width: 52px;
+  height: ${CELL_WIDTH + 2}px;
+  width: ${gridWidth + 1}px;
+  &:last-child {
+    border-bottom: 1px dashed black;
+  }
 `;
-
-function GridTile(props) {
-  const {isSelected, tile} = props;
-  if (!tile) {
-    return null;
-  }
-  if (isSelected) {
-    return (
-      <SelectedTile>
-        {tile.char}
-      </SelectedTile>
-    );
-  }
-  return (
-    <Tile>
-      {tile.char}
-    </Tile>
-  );
-}
-
-GridTile.propTypes = {
-  isSelected: PropTypes.bool,
-  tile: PropTypes.object
-};
 
 export default function Grid(props) {
-  const {grid, onPlaceTile, selectedId} = props;
+  const {grid, onPlaceTile} = props;
 
-  function onClickGrid(row, column) {
-    onPlaceTile(row, column);
-  }
   return (
     <StyledGrid>
       {grid.map((row, rowIndex) => (
         <GridRow>
-          {row.map((tile, colIndex) => (
-            <GridCell
-              onClick={() => (onClickGrid(rowIndex, colIndex))}
-              borderBottom={rowIndex === grid.length - 1}
-              borderRight={colIndex === row.length - 1}
-            >
-              <GridTile tile={tile} isSelected={tile && tile.id === selectedId} />
-            </GridCell>
+          {row.map((tile, columnIndex) => (
+            <GridCell tile={tile} onPlaceTile={(placedTile) => onPlaceTile(placedTile, rowIndex, columnIndex)} />
           ))}
         </GridRow>
       ))}
@@ -77,6 +41,5 @@ export default function Grid(props) {
 
 Grid.propTypes = {
   grid: PropTypes.array,
-  onPlaceTile: PropTypes.func,
-  selectedId: PropTypes.number
+  onPlaceTile: PropTypes.func
 };
